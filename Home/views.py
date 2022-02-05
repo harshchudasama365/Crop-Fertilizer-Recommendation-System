@@ -1,7 +1,11 @@
 from os import stat
+from urllib import response
 from django.shortcuts import render
 import pickle
 import numpy as np
+import pandas as pd
+from .utils import fertilizer_dict
+from markdown import markdown
 
 # Loading crop recommendation model
 
@@ -30,11 +34,62 @@ def crop_form_result(request):
     temperature, humidity = 21, 82
     data = np.array([[N, P, K, temperature, humidity, ph_level, rainfall]])
     my_prediction = crop_recommendation_model.predict(data)
-    final_prediction = my_prediction[0]
-    print(final_prediction)
-    return render(request, 'crop_form.html')
+    final_prediction = { 'prediction' : my_prediction[0]}
+    # print(final_prediction.prediction)
+    return render(request, 'crop_form_result.html', final_prediction)
 
 def fertilizer_form(request):
     return render(request, 'fertilizer_form.html')
+
+def fertilizer_form_result(request):
+    if request.method == "POST":
+        crop = request.POST.get('crop')
+        N_filled = request.POST.get('N')
+        P_filled = request.POST.get('P')
+        K_filled = request.POST.get('K')
+    df = pd.read_csv('.//Data/Crop_NPK.csv')
+    print(df)
+    # print(crop,N,P,K)
+
+    N_desired = df[df['Crop'] == crop]['N'].iloc[0]
+    P_desired = df[df['Crop'] == crop]['P'].iloc[0]
+    K_desired = df[df['Crop'] == crop]['K'].iloc[0]
+
+    print(N_desired, P_desired,K_desired)
+    n = N_desired-int(N_filled)
+    p = P_desired - int(P_filled)
+    k = K_desired - int(K_filled)
+    # print(n,p,k)
+    if n < 0:
+        key1 = "NHigh"
+    elif n > 0:
+        key1 = "Nlow"
+    else:
+        key1 = "NNo"
+
+    if p < 0:
+        key2 = "PHigh"
+    elif p > 0:
+        key2 = "Plow"
+    else:
+        key2 = "PNo"
+
+    if k < 0:
+        key3 = "KHigh"
+    elif k > 0:
+        key3 = "Klow"
+    else:
+        key3 = "KNo"
+
+    abs_n = abs(n)
+    abs_p = abs(p)
+    abs_k = abs(k)
+
+    response1 = markdown(str(fertilizer_dict[key1]))
+    response2 = markdown(str(fertilizer_dict[key2]))
+    response3 = markdown(str(fertilizer_dict[key3]))
+    response_dict = {'response1':response1,'response2':response2,'response3':response3,'diff_n':abs_n, 'diff_p':abs_p,'diff_k': abs_k}
+    return render(request, 'fertilizer_form_result.html', response_dict)
+    # return render(request, 'fertilizer_form.html')
 
 

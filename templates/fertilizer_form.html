@@ -166,7 +166,7 @@
     >
       <div class="container-contact2">
         <div class="wrap-contact2">
-          <form class="contact2-form validate-form" method="POST" action='crop_form_result'>
+          <form class="contact2-form validate-form" method="POST" action='fertilizer_form_result'>
             {% csrf_token %}
             <span class="contact2-form-title">Find the best crop for your farm</span>
 
@@ -198,6 +198,13 @@
               class="wrap-input2 validate-input"
               data-validate="Valid email is required: ex@abc.xyz"
             >
+              <input class="input2" type="text"  id="crop" name="crop"/>
+              <span class="focus-input2" data-placeholder="Crop you want to grow"></span>
+            </div>
+            <div
+              class="wrap-input2 validate-input"
+              data-validate="Valid email is required: ex@abc.xyz"
+            >
               <input class="input2" type="text"  id="N" name="N"/>
               <span class="focus-input2" data-placeholder="Nitrogen"></span>
             </div>
@@ -218,37 +225,7 @@
               <span class="focus-input2" data-placeholder="Pottasiun"></span>
             </div>
 
-            <div
-              class="wrap-input2 validate-input"
-              data-validate="Valid email is required: ex@abc.xyz"
-            >
-              <input class="input2" type="text"  id="ph_level" name="ph_level"/>
-              <span class="focus-input2" data-placeholder="PH Level"></span>
-            </div>
-
-            <div
-              class="wrap-input2 validate-input"
-              data-validate="Valid email is required: ex@abc.xyz"
-            >
-              <input class="input2" type="text"  id="rainfall" name="rainfall"/>
-              <span class="focus-input2" data-placeholder="Rainfall"></span>
-            </div>
-
-            <div
-              class="wrap-input2 validate-input"
-              data-validate="Valid email is required: ex@abc.xyz"
-            >
-              <input class="input2" type="text" id="state" name="state"/>
-              <span class="focus-input2" data-placeholder="State"></span>
-            </div>
-
-            <div
-              class="wrap-input2 validate-input"
-              data-validate="Valid email is required: ex@abc.xyz"
-            >
-              <input class="input2" type="text" id="city" name="city"/>
-              <span class="focus-input2" data-placeholder="City"></span>
-            </div>
+            
 
             <div class="container-contact2-form-btn">
               <div class="wrap-contact2-form-btn">
