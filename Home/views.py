@@ -4,10 +4,58 @@ from django.shortcuts import render
 import pickle
 import numpy as np
 import pandas as pd
-from .utils import fertilizer_dict
+from .utils import fertilizer_dict, CNN_Model
 from markdown import markdown
+from django.shortcuts import redirect
+import torch
+from torchvision import transforms
+from PIL import Image
+import io
 
+disease_classes = ['Apple___Apple_scab',
+'Apple___Black_rot',
+'Apple___Cedar_apple_rust',
+'Apple___healthy',
+'Cherry_(including_sour)___Powdery_mildew',
+'Cherry_(including_sour)___healthy',
+'Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot',
+'Corn_(maize)___Common_rust_',
+'Corn_(maize)___Northern_Leaf_Blight',
+'Corn_(maize)___healthy',
+'Grape___Black_rot',
+'Grape___Esca_(Black_Measles)',
+'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)',
+'Grape___healthy',
+'Peach___Bacterial_spot',
+'Peach___healthy',
+'Pepper,_bell___Bacterial_spot',
+'Pepper,_bell___healthy',
+'Potato___Early_blight',
+'Potato___Late_blight',
+'Potato___healthy',
+'Strawberry___Leaf_scorch',
+'Strawberry___healthy',
+'Tomato___Bacterial_spot',
+'Tomato___Early_blight',
+'Tomato___Late_blight',
+'Tomato___Leaf_Mold',
+'Tomato___Septoria_leaf_spot',
+'Tomato___Spider_mites Two-spotted_spider_mite',
+'Tomato___healthy']
 # Loading crop recommendation model
+
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+disease_model_path = './models/plant_disease_model.pth'
+disease_model = CNN_Model()
+# disease_model.load_state_dict(torch.load(disease_model_path), map_location=torch.device('cpu'))
+disease_model.load_state_dict(torch.load(disease_model_path))
+# disease_model = disease_model.to(device)
+disease_model.eval()
+
+
+# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 
 crop_recommendation_model_path = './models/RandomForest.pkl'
 crop_recommendation_model = pickle.load(
@@ -91,5 +139,40 @@ def fertilizer_form_result(request):
     response_dict = {'response1':response1,'response2':response2,'response3':response3,'diff_n':abs_n, 'diff_p':abs_p,'diff_k': abs_k}
     return render(request, 'fertilizer_form_result.html', response_dict)
     # return render(request, 'fertilizer_form.html')
+
+def plant_disease_form(request):
+    return render(request, 'plant_disease_form.html')
+
+
+def predict_image(img, model=disease_model):
+    transform = transforms.ToTensor()
+    # transform = transforms.Compose([
+    #     transforms.Resize(256),
+    #     transforms.ToTensor(),
+    # ])
+    image = Image.open(io.BytesIO(img))
+    img_t = transform(image)
+    img_u = torch.unsqueeze(img_t, 0)
+    yb = model(img_u)
+    _, preds = torch.max(yb , dim=1)
+    print(preds[0].item())
+    prediction = disease_classes[preds[0].item()]
+    # Retrieve the class label
+    return prediction
+
+
+def plant_disease_form_result(request):
+    if 'file' not in request.FILES:
+        return redirect("/")
+    file = request.FILES["file"] 
+    if not file:
+        return render(request,'plant_disease_form.html')
+    try:
+        img = file.read()
+        prediction = predict_image(img)
+        prediction_dict = {'prediction':prediction}
+    except:
+        pass
+    return render(request, 'plant_disease_form_result.html', prediction_dict)
 
 
