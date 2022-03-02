@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
 <div style = "padding-top: 5%; padding-bottom: 5%; padding-left: 15%;padding-right: 15%;">
     <p style="color: #c79c60; font-size: 20px; font-family: 'Recursive', sans-serif;">
         Difference between desired value of N and your farm's N value is {{ diff_n }}</p>
@@ -15,3 +19,4 @@
         <!-- {{ response3}} -->
     </p>
 </div>
+{% endblock content %}
