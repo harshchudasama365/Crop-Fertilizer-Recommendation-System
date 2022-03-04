@@ -1,7 +1,9 @@
       {% extends 'base.html' %}
       {% load static %}
       {% block content %}
-            <h2 style="text-align: center; margin: 0px; color: black">
+
+      <div class="container py-2 mx-auto my-5 h-5" style="margin: 9rem;background-color:powderblue;background-image :url('https://st.hzcdn.com/simgs/pictures/landscapes/great-design-plants-le-jardinet-img~d15176de02d95cbf_4-6769-1-efceb15.jpg');background-size:cover">
+            <h2 style="text-align: center; margin: 0px; color: white">
               <b>Find out which disease has been caught by your plant</b>
             </h2>
             <br />
@@ -15,20 +17,21 @@
               border-radius: 25px;
               padding: 10px 10px;
               font-weight: bold;
+              color : white;
             ">
         <form class="form-signin" enctype="multipart/form-data"  method="POST" action='plant_disease_form_result'> 
             {% csrf_token %}
-            <h2 class="h4 mb-3 font-weight-normal"><b>Please Upload The Image</b></h2>
-            <input type="file" name="file" class="form-control-file" id="inputfile" onchange="preview_image(event)" style="font-weight: bold;">
+            <h2 class="h4 mb-3 font-weight-normal" style="color: white"><b>Please Upload The Image</b></h2>
+            <input type="file" name="file" class="form-control-file" id="inputfile" onchange="preview_image(event)" style="font-weight: bold;margin:5px;">
             <br>
             <br>
-            <img id="output-image" class="rounded mx-auto d-block" />
-            <button class="btn btn-lg btn-primary btn-block" type="submit" style="font-weight: bold;">Predict</button>
+            <img id="output-image" class="rounded mx-auto d-block" style="margin:5px;"/>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" style="font-weight: bold;margin:8px; background-color:orange">Predict</button>
         
         
           </form>
         </div>
-        
+      </div>
         <script type="text/javascript">
           function preview_image(event) {
             var reader = new FileReader();

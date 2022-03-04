@@ -10,5 +10,6 @@ urlpatterns = [
     path('fertilizer_form_result', views.fertilizer_form_result, name='fertilizer_form_result'),
     path('plant_disease_form', views.plant_disease_form, name='plant_disease_form'),
     path('plant_disease_form_result', views.plant_disease_form_result, name='plant_disease_form_result'),
-    path('index', views.index, name="home")
+    path('index', views.index, name="home"),
+    path('contact', views.contact, name='contact'),
 ]

@@ -184,4 +184,6 @@ def plant_disease_form_result(request):
         pass
     return render(request, 'plant_disease_form_result.html', prediction_dict)
 
+def contact(request):
+    return render(request, 'contact.html')
 
