@@ -4,13 +4,16 @@ from django.shortcuts import render
 import pickle
 import numpy as np
 import pandas as pd
-from .utils import fertilizer_dict, CNN_Model
-from markdown import markdown
+from .utils import fertilizer_dict, CNN_Model,disease_dic
 from django.shortcuts import redirect
 import torch
 from torchvision import transforms
 from PIL import Image
 import io
+from markupsafe import Markup
+from django.templatetags.static import static
+from django.utils.safestring import mark_safe
+
 
 disease_classes = ['Apple___Apple_scab',
 'Apple___Black_rot',
@@ -82,7 +85,12 @@ def crop_form_result(request):
     temperature, humidity = 21, 82
     data = np.array([[N, P, K, temperature, humidity, ph_level, rainfall]])
     my_prediction = crop_recommendation_model.predict(data)
-    final_prediction = { 'prediction' : my_prediction[0]}
+    final_crop_prediction = my_prediction[0]
+    pred='images/crop/'+final_crop_prediction+'.jpg'
+    url = static(pred)
+    img = mark_safe('<img src="{url}" width="780px" height="450px" alt={{prediction}}>'.format(url=url))
+    final_prediction = { 'prediction' : final_crop_prediction, 'pred':pred,'img':img}
+
     # print(final_prediction.prediction)
     return render(request, 'crop_form_result.html', final_prediction)
 
@@ -133,9 +141,9 @@ def fertilizer_form_result(request):
     abs_p = abs(p)
     abs_k = abs(k)
 
-    response1 = markdown(str(fertilizer_dict[key1]))
-    response2 = markdown(str(fertilizer_dict[key2]))
-    response3 = markdown(str(fertilizer_dict[key3]))
+    response1 = Markup(str(fertilizer_dict[key1]))
+    response2 = Markup(str(fertilizer_dict[key2]))
+    response3 = Markup(str(fertilizer_dict[key3]))
     response_dict = {'response1':response1,'response2':response2,'response3':response3,'diff_n':abs_n, 'diff_p':abs_p,'diff_k': abs_k}
     return render(request, 'fertilizer_form_result.html', response_dict)
     # return render(request, 'fertilizer_form.html')
@@ -170,6 +178,7 @@ def plant_disease_form_result(request):
     try:
         img = file.read()
         prediction = predict_image(img)
+        prediction = Markup(str(disease_dic[prediction]))
         prediction_dict = {'prediction':prediction}
     except:
         pass
