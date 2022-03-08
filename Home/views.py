@@ -154,10 +154,11 @@ def plant_disease_form(request):
 
 def predict_image(img, model=disease_model):
     transform = transforms.ToTensor()
-    # transform = transforms.Compose([
-    #     transforms.Resize(256),
-    #     transforms.ToTensor(),
-    # ])
+    transform = transforms.Compose([
+        transforms.Resize([256,256]),
+        # transforms.Resize(256),
+        transforms.ToTensor(),
+    ])
     image = Image.open(io.BytesIO(img))
     img_t = transform(image)
     img_u = torch.unsqueeze(img_t, 0)
@@ -172,6 +173,7 @@ def predict_image(img, model=disease_model):
 def plant_disease_form_result(request):
     if 'file' not in request.FILES:
         return redirect("/")
+    # prediction_dict = {}
     file = request.FILES["file"] 
     if not file:
         return render(request,'plant_disease_form.html')
@@ -180,8 +182,10 @@ def plant_disease_form_result(request):
         prediction = predict_image(img)
         prediction = Markup(str(disease_dic[prediction]))
         prediction_dict = {'prediction':prediction}
+        # print(prediction_dict)
     except:
         pass
+    
     return render(request, 'plant_disease_form_result.html', prediction_dict)
 
 def contact(request):
