@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<script src="{% static 'js_form/cities.js' %}"></script>
     <div
       class="bg-contact2"
       style="background-image: url({% static 'images_form/bg-02.jpg'%}) ; "
@@ -52,21 +53,47 @@
               <span class="focus-input2" data-placeholder="Rainfall"></span>
             </div>
 
-            <div
+            <!-- <div
               class="wrap-input2 validate-input"
               data-validate="Valid email is required: ex@abc.xyz"
             >
+            
               <input class="input2" type="text" id="state" name="state"/>
               <span class="focus-input2" data-placeholder="State"></span>
-            </div>
+            </div> -->
+          
+            <div class="wrap-input2 validate-input">
+            <label for="State" class="input2" style="font-family: Poppins-Regular;">State</label>
+      <select
+        onchange="print_city('state', this.selectedIndex);"
+        id="sts"
+        name="stt"
+        class="form-control"
+        style="font-weight: 200; color: #555555;border: none;"
+        required
+      ></select>
+      </div>
+      <div class="wrap-input2 validate-input">
+      <label for="City"  class="input2" style="font-family: Poppins-Regular;">City</label>
+      <select
+        id="state"
+        class="form-control"
+        name="city"
+        style="font-weight: 200; color: #555555;border: none;"
+        required
+      ></select>
+      <script language="javascript">
+        print_state("sts");
+      </script>
+      </div>
 
-            <div
+            <!-- <div
               class="wrap-input2 validate-input"
               data-validate="Valid email is required: ex@abc.xyz"
             >
               <input class="input2" type="text" id="city" name="city"/>
               <span class="focus-input2" data-placeholder="City"></span>
-            </div>
+            </div> -->
 
             <div class="container-contact2-form-btn">
               <div class="wrap-contact2-form-btn">
@@ -88,6 +115,8 @@
     <script src="{% static 'vendor_form/select2/select2.min.js' %}"></script>
 
     <script src="{% static 'js_form/main.js' %}"></script>
+    
+
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script

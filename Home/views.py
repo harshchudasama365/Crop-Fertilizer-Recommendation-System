@@ -13,7 +13,7 @@ import io
 from markupsafe import Markup
 from django.templatetags.static import static
 from django.utils.safestring import mark_safe
-
+import requests
 
 disease_classes = ['Apple___Apple_scab',
 'Apple___Black_rot',
@@ -78,11 +78,11 @@ def crop_form_result(request):
         K = request.POST.get('K')
         ph_level = request.POST.get('ph_level')
         rainfall = request.POST.get('rainfall')
-        state = request.POST.get('state')
+        # state = request.POST.get('state')
         city = request.POST.get('city')
-        print("HElo")
-        print(N, P, K, ph_level, rainfall, state)
-    temperature, humidity = 21, 82
+        print("HElo"+ city)
+        print(N, P, K, ph_level, rainfall)
+    temperature, humidity = weatherInfo(city)
     data = np.array([[N, P, K, temperature, humidity, ph_level, rainfall]])
     my_prediction = crop_recommendation_model.predict(data)
     final_crop_prediction = my_prediction[0]
@@ -191,3 +191,19 @@ def plant_disease_form_result(request):
 def contact(request):
     return render(request, 'contact.html')
 
+
+def weatherInfo(city):
+    api_key = "1f06ecea104a74bc101e05bd85c9bc81"
+    base_url = "http://api.openweathermap.org/data/2.5/weather?"
+
+    complete_url = base_url + "appid=" + api_key + "&q=" + city
+    response = requests.get(complete_url)
+    x = response.json()
+
+    if x["cod"] != "404":
+        y = x["main"]
+
+        temperature = round((y["temp"] - 273.15), 2)
+        humidity = y["humidity"]
+    return temperature, humidity
+    
