@@ -14,6 +14,7 @@ from markupsafe import Markup
 from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 import requests
+from datetime import date
 
 disease_classes = ['Apple___Apple_scab',
 'Apple___Black_rot',
@@ -66,9 +67,12 @@ crop_recommendation_model = pickle.load(
 
 # Create your views here.
 def index(request):
+    
     return render(request, 'index.html')
 
 def crop_form(request):
+    
+    # print(rainfall_value)
     return render(request, 'crop_form.html')
 
 def crop_form_result(request):
@@ -77,13 +81,21 @@ def crop_form_result(request):
         P = request.POST.get('P')
         K = request.POST.get('K')
         ph_level = request.POST.get('ph_level')
-        rainfall = request.POST.get('rainfall')
+        # rainfall = request.POST.get('rainfall')
         # state = request.POST.get('state')
         city = request.POST.get('city')
-        print("HElo"+ city)
-        print(N, P, K, ph_level, rainfall)
+        print("HElo"+ city )
+        print(type(city))
+        print(N, P, K, ph_level)
+    df2 = pd.read_csv('.//Data/rainfall.csv')
+    rainfall_value = df2[(df2['District'] == city.strip()) & (df2['Month'] == str(date.today().month)) ]['rainfall'].iloc[0]
+    # rainfall_value = "5.6"
+    print(type(date.today().month))
     temperature, humidity = weatherInfo(city)
-    data = np.array([[N, P, K, temperature, humidity, ph_level, rainfall]])
+    print(temperature, humidity)
+    data = np.array([[N, P, K, temperature, humidity, ph_level, rainfall_value]])
+
+    print( "rainfall data is here for "+ city + "is "+ rainfall_value)
     my_prediction = crop_recommendation_model.predict(data)
     final_crop_prediction = my_prediction[0]
     pred='images/crop/'+final_crop_prediction+'.jpg'
@@ -205,5 +217,6 @@ def weatherInfo(city):
 
         temperature = round((y["temp"] - 273.15), 2)
         humidity = y["humidity"]
-    return temperature, humidity
+        return temperature, humidity
+    return 0,0
     
