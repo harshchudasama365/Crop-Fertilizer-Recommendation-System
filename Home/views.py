@@ -88,14 +88,17 @@ def crop_form_result(request):
         print(type(city))
         print(N, P, K, ph_level)
     df2 = pd.read_csv('.//Data/rainfall.csv')
-    rainfall_value = df2[(df2['District'] == city.strip()) & (df2['Month'] == str(date.today().month)) ]['rainfall'].iloc[0]
+    df2['rainfall'] = df2['rainfall'].astype(float)
+    rainfall_value = df2[(df2['District'] == city.strip())]['rainfall'].mean()
+    # rainfall_value = df2[(df2['District'] == city.strip()) & (df2['Month'] == str(date.today().month)) ]['rainfall'].iloc[0]
     # rainfall_value = "5.6"
     print(type(date.today().month))
-    temperature, humidity = weatherInfo(city)
+    # temperature, humidity = weatherInfo(city)
+    temperature, humidity = 22, 60
     print(temperature, humidity)
     data = np.array([[N, P, K, temperature, humidity, ph_level, rainfall_value]])
 
-    print( "rainfall data is here for "+ city + "is "+ rainfall_value)
+    print( "rainfall data is here for "+ city + "is "+ str(rainfall_value))
     my_prediction = crop_recommendation_model.predict(data)
     final_crop_prediction = my_prediction[0]
     pred='images/crop/'+final_crop_prediction+'.jpg'
