@@ -1,5 +1,7 @@
 from os import stat
+from unittest import result
 from urllib import response
+from cv2 import recoverPose
 from django.shortcuts import render
 import pickle
 import numpy as np
@@ -15,6 +17,11 @@ from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 import requests
 from datetime import date
+from requests_html import HTMLSession, AsyncHTMLSession
+import requests, time, aiohttp,asyncio
+import nest_asyncio
+from django.http import JsonResponse
+import concurrent.futures
 
 disease_classes = ['Apple___Apple_scab',
 'Apple___Black_rot',
@@ -65,8 +72,12 @@ crop_recommendation_model_path = './models/RandomForest.pkl'
 crop_recommendation_model = pickle.load(
     open(crop_recommendation_model_path, 'rb'))
 
+
+
 # Create your views here.
 def index(request):
+
+    
     
     return render(request, 'index.html')
 
@@ -222,4 +233,79 @@ def weatherInfo(city):
         humidity = y["humidity"]
         return temperature, humidity
     return 0,0
+
+
+async def fetch(url):
+    nest_asyncio.apply()
+    session = AsyncHTMLSession()
     
+
+    r = await session.get(url)
+
+
+    r.html.render(scrolldown=5, timeout=20)
+
+    articles = r.html.find('article')
+
+
+    global newslist
+    newslist = []
+
+
+    for item in articles:
+        try:
+            newsitem = item.find('h3', first=True)
+            # newsimg =  item.find('img')
+            title = newsitem.text
+            link = newsitem.absolute_links
+            # img = newsimg.link
+
+            newsarticle = {
+                'title': title,
+                'link': next(iter(link)) ,
+                # 'img':img
+            }
+            newslist.append(newsarticle)
+        except:
+            pass
+
+    r.close()
+    session.close()
+    print(newslist)
+    return newslist
+    # response_news = {'new_list' : newslist}
+    # # response_news = {'news_list':[{'title': 'How Helena Agri-Enterprises is ready to grow', 'link': 'https://www.agriculture.com/news/business/how-helena-chemical-is-ready-to-grow'}, {'title': 'Manure And Cover Crops', 'link': 'https://www.agriculture.com/podcast/successful-farming-radio-podcast/manure-and-cover-crops'}, {'title': 'The future of weed management may be seed prevention technologies', 'link': 'https://www.agriculture.com/crops/crop-protection/the-future-of-weed-management-may-be-seed-prevention-technologies'}, {'title': '3 soil fertility strategies for 2022', 'link': 'https://www.agriculture.com/video/3-soil-fertility-strategies-for-2022'}, {'title': '5 strategies to overcome weed control issues', 'link': 'https://www.agriculture.com/video/5-strategies-to-overcome-weed-control-issues'}, {'title': 'CFAD releases new white paper', 'link': 'https://www.agriculture.com/crops/conservation/agree-cfad-releases-new-white-paper'}, {'title': 'Study shows consumers have limited understanding of the carbon farming market', 'link': 'https://www.agriculture.com/crops/study-shows-consumers-have-limited-understanding-of-the-carbon-farming-market'}, {'title': 'Soil Carbon Initiative launches new farm certification pilots', 'link': 'https://www.agriculture.com/crops/soil-health/soil-carbon-initiative-launches-new-farm-certification-pilots'}, {'title': 'USDA to invest $250 million to support American-made fertilizer', 'link': 'https://www.agriculture.com/crops/fertilizers/usda-to-invest-250-million-to-support-american-made-fertilizer'}]}
+    # return render(request, 'news.html', response_news)
+def news(request):
+   
+
+    response_news = dict()
+    # response_news = {'new_list' : newslist}
+    response_news = {'news_list':[{'title': 'How Helena Agri-Enterprises is ready to grow', 'link': 'https://www.agriculture.com/news/business/how-helena-chemical-is-ready-to-grow','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': 'Manure And Cover Crops', 'link': 'https://www.agriculture.com/podcast/successful-farming-radio-podcast/manure-and-cover-crops','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': 'The future of weed management may be seed prevention technologies', 'link': 'https://www.agriculture.com/crops/crop-protection/the-future-of-weed-management-may-be-seed-prevention-technologies','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': '3 soil fertility strategies for 2022', 'link': 'https://www.agriculture.com/video/3-soil-fertility-strategies-for-2022','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': '5 strategies to overcome weed control issues', 'link': 'https://www.agriculture.com/video/5-strategies-to-overcome-weed-control-issues','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': 'CFAD releases new white paper', 'link': 'https://www.agriculture.com/crops/conservation/agree-cfad-releases-new-white-paper','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': 'Study shows consumers have limited understanding of the carbon farming market', 'link': 'https://www.agriculture.com/crops/study-shows-consumers-have-limited-understanding-of-the-carbon-farming-market','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': 'Soil Carbon Initiative launches new farm certification pilots', 'link': 'https://www.agriculture.com/crops/soil-health/soil-carbon-initiative-launches-new-farm-certification-pilots','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': 'USDA to invest $250 million to support American-made fertilizer', 'link': 'https://www.agriculture.com/crops/fertilizers/usda-to-invest-250-million-to-support-american-made-fertilizer','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}]}
+    return render(request, 'news.html', response_news)
+
+# async def news(request):
+    
+
+    
+
+#     url='https://www.agriculture.com/crops'
+#     async with aiohttp.ClientSession() as client:
+#         tasks = []
+#         task =  asyncio.ensure_future(fetch(url))
+#         tasks.append(task)
+#         results = await asyncio.gather(task)
+#         response_news = {'new_list' : results}
+    
+#     # response_news = {'new_list' : response_news}
+#     # # response_news = {'news_list':[{'title': 'How Helena Agri-Enterprises is ready to grow', 'link': 'https://www.agriculture.com/news/business/how-helena-chemical-is-ready-to-grow'}, {'title': 'Manure And Cover Crops', 'link': 'https://www.agriculture.com/podcast/successful-farming-radio-podcast/manure-and-cover-crops'}, {'title': 'The future of weed management may be seed prevention technologies', 'link': 'https://www.agriculture.com/crops/crop-protection/the-future-of-weed-management-may-be-seed-prevention-technologies'}, {'title': '3 soil fertility strategies for 2022', 'link': 'https://www.agriculture.com/video/3-soil-fertility-strategies-for-2022'}, {'title': '5 strategies to overcome weed control issues', 'link': 'https://www.agriculture.com/video/5-strategies-to-overcome-weed-control-issues'}, {'title': 'CFAD releases new white paper', 'link': 'https://www.agriculture.com/crops/conservation/agree-cfad-releases-new-white-paper'}, {'title': 'Study shows consumers have limited understanding of the carbon farming market', 'link': 'https://www.agriculture.com/crops/study-shows-consumers-have-limited-understanding-of-the-carbon-farming-market'}, {'title': 'Soil Carbon Initiative launches new farm certification pilots', 'link': 'https://www.agriculture.com/crops/soil-health/soil-carbon-initiative-launches-new-farm-certification-pilots'}, {'title': 'USDA to invest $250 million to support American-made fertilizer', 'link': 'https://www.agriculture.com/crops/fertilizers/usda-to-invest-250-million-to-support-american-made-fertilizer'}]}
+
+#     return render(request, 'news.html', response_news)
+
+        
+
+
+# with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+#     url='https://www.agriculture.com/crops'
+#     executor.submit(fetch, url)
+        

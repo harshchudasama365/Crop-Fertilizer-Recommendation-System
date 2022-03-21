@@ -1,0 +1,49 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<section class="gray-boxed-wrapper home-one__boxed" style="margin-top: 0px">
+  <img
+    src="{% static 'images/icons/home-1-blog-bg.png' %}"
+    alt=""
+    class="home-one__boxed-bg"
+  />
+  <div class="blog-home-two blog-home-one">
+    <div class="container">
+      <div class="row top-row">
+        <div class="col-lg-6">
+          <div class="block-title">
+            <div class="block-title__image"></div>
+            <p>From the blog post</p>
+            <h3>Latest News & Articles Directly from Blog</h3>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        {% for item in news_list %}
+        <div class="col-md-12 col-lg-4">
+          <div class="blog-card">
+            <div class="blog-card__image">
+              <img
+                src="{{ item.img }}"
+                alt="Best Way to Do Eco and Agriculture"
+              />
+              <a href="blog-details.html"></a>
+            </div>
+            <div class="blog-card__content">
+              <div class="blog-card__date">18 Nov</div>
+              <!-- <div class="blog-card__meta">
+    <a href="blog-details.html"><i class="far fa-user-circle"></i> by Admin</a>
+    <a href="blog-details.html"><i class="far fa-comments"></i> 2 Comments</a>
+    </div> -->
+              <h3><a href="{{ item.link }}">{{ item.title }}</a></h3>
+              <a href="{{ item.link }}" class="thm-btn">Read More</a>
+            </div>
+          </div>
+        </div>
+
+        {% endfor %}
+      </div>
+      <hr />
+    </div>
+  </div>
+</section>
+
+{% endblock content %}
