@@ -22,6 +22,9 @@ import requests, time, aiohttp,asyncio
 import nest_asyncio
 from django.http import JsonResponse
 import concurrent.futures
+from .models import *
+from django.contrib import messages
+import datetime
 
 disease_classes = ['Apple___Apple_scab',
 'Apple___Black_rot',
@@ -76,7 +79,16 @@ crop_recommendation_model = pickle.load(
 
 # Create your views here.
 def index(request):
-
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        service = request.POST.get('service')
+        mobile_no = request.POST.get('mobile_no')      
+        message = request.POST.get('message')
+        contact = Contact(name=name, email=email, mobile_no=mobile_no, service=service,
+                        message=message, date=datetime.date.today())
+        contact.save()
+        messages.success(request, 'Your Form Has Been Submitted.')
     
     
     return render(request, 'index.html')
@@ -214,8 +226,6 @@ def plant_disease_form_result(request):
     
     return render(request, 'plant_disease_form_result.html', prediction_dict)
 
-def contact(request):
-    return render(request, 'contact.html')
 
 
 def weatherInfo(city):
