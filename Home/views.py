@@ -286,13 +286,7 @@ async def fetch(url):
     # response_news = {'new_list' : newslist}
     # # response_news = {'news_list':[{'title': 'How Helena Agri-Enterprises is ready to grow', 'link': 'https://www.agriculture.com/news/business/how-helena-chemical-is-ready-to-grow'}, {'title': 'Manure And Cover Crops', 'link': 'https://www.agriculture.com/podcast/successful-farming-radio-podcast/manure-and-cover-crops'}, {'title': 'The future of weed management may be seed prevention technologies', 'link': 'https://www.agriculture.com/crops/crop-protection/the-future-of-weed-management-may-be-seed-prevention-technologies'}, {'title': '3 soil fertility strategies for 2022', 'link': 'https://www.agriculture.com/video/3-soil-fertility-strategies-for-2022'}, {'title': '5 strategies to overcome weed control issues', 'link': 'https://www.agriculture.com/video/5-strategies-to-overcome-weed-control-issues'}, {'title': 'CFAD releases new white paper', 'link': 'https://www.agriculture.com/crops/conservation/agree-cfad-releases-new-white-paper'}, {'title': 'Study shows consumers have limited understanding of the carbon farming market', 'link': 'https://www.agriculture.com/crops/study-shows-consumers-have-limited-understanding-of-the-carbon-farming-market'}, {'title': 'Soil Carbon Initiative launches new farm certification pilots', 'link': 'https://www.agriculture.com/crops/soil-health/soil-carbon-initiative-launches-new-farm-certification-pilots'}, {'title': 'USDA to invest $250 million to support American-made fertilizer', 'link': 'https://www.agriculture.com/crops/fertilizers/usda-to-invest-250-million-to-support-american-made-fertilizer'}]}
     # return render(request, 'news.html', response_news)
-def news(request):
-   
 
-    response_news = dict()
-    # response_news = {'new_list' : newslist}
-    response_news = {'news_list':[{'title': 'How Helena Agri-Enterprises is ready to grow', 'link': 'https://www.agriculture.com/news/business/how-helena-chemical-is-ready-to-grow','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': 'Manure And Cover Crops', 'link': 'https://www.agriculture.com/podcast/successful-farming-radio-podcast/manure-and-cover-crops','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': 'The future of weed management may be seed prevention technologies', 'link': 'https://www.agriculture.com/crops/crop-protection/the-future-of-weed-management-may-be-seed-prevention-technologies','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': '3 soil fertility strategies for 2022', 'link': 'https://www.agriculture.com/video/3-soil-fertility-strategies-for-2022','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': '5 strategies to overcome weed control issues', 'link': 'https://www.agriculture.com/video/5-strategies-to-overcome-weed-control-issues','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': 'CFAD releases new white paper', 'link': 'https://www.agriculture.com/crops/conservation/agree-cfad-releases-new-white-paper','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': 'Study shows consumers have limited understanding of the carbon farming market', 'link': 'https://www.agriculture.com/crops/study-shows-consumers-have-limited-understanding-of-the-carbon-farming-market','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': 'Soil Carbon Initiative launches new farm certification pilots', 'link': 'https://www.agriculture.com/crops/soil-health/soil-carbon-initiative-launches-new-farm-certification-pilots','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}, {'title': 'USDA to invest $250 million to support American-made fertilizer', 'link': 'https://www.agriculture.com/crops/fertilizers/usda-to-invest-250-million-to-support-american-made-fertilizer','img':'https://static.agriculture.com/styles/landscape___category_listing___large/s3/image/2022/03/17/Helena%20Eric%20Cowling.JPG?timestamp=1647622865 242w'}]}
-    return render(request, 'news.html', response_news)
 
 # async def news(request):
     
@@ -319,3 +313,31 @@ def news(request):
 #     url='https://www.agriculture.com/crops'
 #     executor.submit(fetch, url)
         
+def news(request):
+    url = "https://newsapi.org/v2/everything?q=agriculture&from=2022-03-23&sortBy=popularity&apiKey=1bb563a6dc5e42458129668d861c58cd"
+    
+    agri_news = requests.get(url).json()
+    a = agri_news['articles']
+    desc=[]
+    title=[]
+    img=[]
+    lst = []
+    calender = {'01':'Jan','02':'Feb','03':'March','04':'April','05':'May',
+    '06':'June','07':'July','08':'August','09':'Sept','10':'Oct','11':'Nov','12':'Dec'}
+    for i in range(len(a)):
+        f = a[i]
+        temp_dict = dict()
+        temp_dict['title'] = f['title']
+        temp_dict['description'] = f['description']
+        temp_dict['img'] = f['urlToImage']
+        temp_dict['link'] = f['url']
+        data = f['publishedAt']
+        month = calender[data[5:7]]
+        day = data[8:10]
+        temp_dict['date'] = day+" "+month
+        lst.append(temp_dict)
+    # news_list = zip(title, desc, img)
+    context = {'news_list':lst}
+    print(lst)
+    
+    return render(request, 'news.html', context)
