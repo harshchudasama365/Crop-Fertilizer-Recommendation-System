@@ -120,7 +120,7 @@
     <li><a href="blog-details.html">News Details</a></li>
   </ul>
 </li>
-<li class="dropdown"><a href="contact">Shop</a></li>
+<li class="dropdown"><a href="index#shop">Shop</a></li>
 </ul>
 
 <div class="main-header__info">
@@ -138,12 +138,19 @@
 </nav>
 
 </header>
-
+{% if messages %} {% for message in messages %}
+	<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="margin:0">
+		{{ message }}
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	{% endfor %} {% endif %}
 {% block content %}
 
 {% endblock content %}
 
-<footer class="site-footer">
+<footer class="site-footer" style="margin:0">
     <img src="{% static 'images/icons/footer-bg-icon-1.png' %}" class="site-footer__shape-1" alt="">
     <img src="{% static 'images/icons/footer-bg-icon-2.png' %}" class="site-footer__shape-2" alt="">
     <div class="container">
