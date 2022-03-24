@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
+
+{% if messages %} {% for message in messages %}
+	<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="margin:0">
+		{{ message }}
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	{% endfor %} {% endif %}
+
 
 <div class="stricky-header stricked-menu main-menu">
     <div class="sticky-header__content"></div>
@@ -339,7 +350,7 @@
                 </div>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4">
-                <form action="/index" method="POST"
+                <form action="/index#contact" method="POST"
                     class="contact-one__form" >
                     {% csrf_token %}
                     <div class="row">

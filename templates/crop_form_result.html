@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<h1 class="text-center" style="margin-top:5%;">
+
+<h1 class="text-center" style="margin:5% 0;">
     <b>You should grow <span class="gold-text"><i> {{ prediction }} </i></span>in your farm</b>
     <br><br>
     <!-- {{pred}} -->
     <!-- <img src="{% static '{{pred}}' %}" width="780px" height="450px" alt={{prediction}}> -->
     {{img}}
 </h1>
+
+
 <!-- <h1> {{prediction}}</h1> -->
 {% endblock content %}
