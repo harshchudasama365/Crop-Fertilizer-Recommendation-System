@@ -19,7 +19,7 @@
               class="wrap-input2 validate-input"
               data-validate="Valid email is required: ex@abc.xyz"
             >
-              <input class="input2" type="text"  id="N" name="N"/>
+              <input class="input2" type="text"  id="N" name="N" min="0" max="100" required/>
               <span class="focus-input2" data-placeholder="Nitrogen"></span>
             </div>
 
@@ -27,7 +27,7 @@
               class="wrap-input2 validate-input"
               data-validate="Valid email is required: ex@abc.xyz"
             >
-              <input class="input2" type="text" name="P" id="P" />
+              <input class="input2" type="text" name="P" id="P" min="0" max="100" required/>
               <span class="focus-input2" data-placeholder="Phosphorous"></span>
             </div>
 
@@ -35,7 +35,7 @@
               class="wrap-input2 validate-input"
               data-validate="Valid email is required: ex@abc.xyz"
             >
-              <input class="input2" type="text" id="K" name="K"/>
+              <input class="input2" type="text" id="K" name="K" min="0" max="100" required/>
               <span class="focus-input2" data-placeholder="Pottasiun"></span>
             </div>
 
@@ -43,26 +43,9 @@
               class="wrap-input2 validate-input"
               data-validate="Valid email is required: ex@abc.xyz"
             >
-              <input class="input2" type="text"  id="ph_level" name="ph_level"/>
+              <input class="input2" type="text"  id="ph_level" name="ph_level" min="0" max="14" required/>
               <span class="focus-input2" data-placeholder="PH Level"></span>
             </div>
-
-            <div
-              class="wrap-input2 validate-input"
-              data-validate="Valid email is required: ex@abc.xyz"
-            >
-              <input class="input2" type="text"  id="rainfall" name="rainfall"/>
-              <span class="focus-input2" data-placeholder="Rainfall"></span>
-            </div>
-
-            <!-- <div
-              class="wrap-input2 validate-input"
-              data-validate="Valid email is required: ex@abc.xyz"
-            >
-            
-              <input class="input2" type="text" id="state" name="state"/>
-              <span class="focus-input2" data-placeholder="State"></span>
-            </div> -->
           
             <div class="wrap-input2 validate-input">
             <label for="State" class="input2" style="font-family: Poppins-Regular;">State</label>
@@ -89,14 +72,6 @@
       </script>
       </div>
 
-            <!-- <div
-              class="wrap-input2 validate-input"
-              data-validate="Valid email is required: ex@abc.xyz"
-            >
-              <input class="input2" type="text" id="city" name="city"/>
-              <span class="focus-input2" data-placeholder="City"></span>
-            </div> -->
-
             <div class="container-contact2-form-btn">
               <div class="wrap-contact2-form-btn">
                 <div class="contact2-form-bgbtn"></div>
@@ -106,7 +81,16 @@
           </form>
         </div>
       </div>
+      
     </div>
+
+
+
+    
+
+
+      
+      
 
     <!--===============================================================================================-->
     <script src="{% static 'vendor_form/jquery/jquery-3.2.1.min.js' %}"></script>
@@ -134,6 +118,7 @@
 
       gtag("config", "UA-23581568-13");
     </script>
+
   </body>
 </html>
 {% endblock content %}

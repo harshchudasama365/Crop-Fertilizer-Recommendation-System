@@ -11,50 +11,26 @@
             {% csrf_token %}
             <span class="contact2-form-title">Find the best crop for your farm</span>
 
-            <!-- <div
-              class="wrap-input2 validate-input"
-              data-validate="Name is required"
-            >
-              <input class="input2" type="text" name="name" />
-              <span class="focus-input2" data-placeholder="NAME"></span>
-            </div>
-
             <div
               class="wrap-input2 validate-input"
               data-validate="Valid email is required: ex@abc.xyz"
             >
-              <input class="input2" type="text" name="email" />
-              <span class="focus-input2" data-placeholder="EMAIL"></span>
-            </div>
-
-            <div
-              class="wrap-input2 validate-input"
-              data-validate="Message is required"
-            >
-              <textarea class="input2" name="message"></textarea>
-              <span class="focus-input2" data-placeholder="MESSAGE"></span>
-            </div> -->
-
-            <div
-              class="wrap-input2 validate-input"
-              data-validate="Valid email is required: ex@abc.xyz"
-            >
-              <input class="input2" type="text"  id="crop" name="crop"/>
+              <input class="input2" type="text"  id="crop" name="crop" required/>
               <span class="focus-input2" data-placeholder="Crop you want to grow"></span>
             </div>
             <div
               class="wrap-input2 validate-input"
               data-validate="Valid email is required: ex@abc.xyz"
             >
-              <input class="input2" type="text"  id="N" name="N"/>
-              <span class="focus-input2" data-placeholder="Nitrogen"></span>
+              <input class="input2" type="text"  id="N" name="N" min="0" max="100" required/>
+              <span class="focus-input2" data-placeholder="Nitrogen" ></span>
             </div>
 
             <div
               class="wrap-input2 validate-input"
               data-validate="Valid email is required: ex@abc.xyz"
             >
-              <input class="input2" type="text" name="P" id="P" />
+              <input class="input2" type="text" name="P" id="P" min="0" max="100" required/>
               <span class="focus-input2" data-placeholder="Phosphorous"></span>
             </div>
 
@@ -62,7 +38,7 @@
               class="wrap-input2 validate-input"
               data-validate="Valid email is required: ex@abc.xyz"
             >
-              <input class="input2" type="text" id="K" name="K"/>
+              <input class="input2" type="text" id="K" name="K" min="0" max="100" required/>
               <span class="focus-input2" data-placeholder="Pottasiun"></span>
             </div>
 
