@@ -6,7 +6,7 @@ from django.shortcuts import render
 import pickle
 import numpy as np
 import pandas as pd
-from .utils import fertilizer_dict, CNN_Model,disease_dic
+from .utils import fertilizer_dict, CNN_Model,disease_dic, ResNet9
 from django.shortcuts import redirect
 import torch
 from torchvision import transforms
@@ -60,8 +60,9 @@ disease_classes = ['Apple___Apple_scab',
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-disease_model_path = './models/plant_disease_model.pth'
+disease_model_path = './models/plant_disease_model1.pth'
 disease_model = CNN_Model()
+disease_model = ResNet9(3, 38)
 # disease_model.load_state_dict(torch.load(disease_model_path), map_location=torch.device('cpu'))
 disease_model.load_state_dict(torch.load(disease_model_path))
 # disease_model = disease_model.to(device)
